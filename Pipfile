@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dagster = "*"
+dagit = "*"
+duckdb = "!=0.3.3"
+dbt-duckdb = "*"
+pandas = "*"
+pyspark = "*"
+dagster-dbt = "*"
+fastparquet = "*"
+grpcio = "==1.48.0"
+
+[dev-packages]
+black = "*"
+parquet-cli = "*"
+ipykernel = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = false
