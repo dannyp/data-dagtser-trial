@@ -1,5 +1,5 @@
 
-from ....resources.domain_io_manager import DomainApiClient  
+from ....resources.io_managers.domain_io_manager import DomainApiClient  
 
 from dagster import build_init_resource_context
 

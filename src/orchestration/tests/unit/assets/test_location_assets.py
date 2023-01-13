@@ -2,7 +2,7 @@ from difflib import restore
 from dagster import build_op_context, with_resources
 
 from ....assets.tutorial import suburb_performance
-from ....resources.domain_io_manager import domain_api_client
+from ....resources.io_managers.domain_io_manager import domain_api_client
 
 def test_postcodes():
     result = suburb_performance.postcodes()

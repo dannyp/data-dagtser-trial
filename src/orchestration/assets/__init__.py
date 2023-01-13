@@ -9,3 +9,5 @@ from . import tutorial
 TUTORIAL = "tutorial"
 
 tutorial_assets = load_assets_from_package_module(package_module=tutorial, group_name=TUTORIAL)
+
+job = tutorial.run
