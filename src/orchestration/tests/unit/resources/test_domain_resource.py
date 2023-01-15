@@ -1,12 +1,19 @@
+import os
 
 from ....resources.io_managers.domain_io_manager import DomainApiClient  
 
-from dagster import build_init_resource_context
+domain_client_id = os.getenv("DOMAIN_CLIENT_ID")
+domain_client_secret = os.getenv("DOMAIN_CLIENT_SECRET")
 
-client = DomainApiClient("", "")
+client = DomainApiClient(domain_client_id, domain_client_secret)
 
 def test_domain_client_not_none():
+    print(f"domain_client_id = {domain_client_id}")
+    print(f"domain_client_secret = {domain_client_secret}")
+
     assert client is not None    
+    assert domain_client_id is not None    
+    assert domain_client_secret is not None    
 
 def test_domain_client_can_authenticate():
     client.authenticate()

@@ -1,5 +1,6 @@
 from ast import Return
 import json
+import os
 from textwrap import indent
 
 import requests
@@ -13,7 +14,7 @@ from requests_oauthlib import OAuth2Session
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
-from dagster import resource
+from dagster import resource, StringSource
 from dagster._utils import file_relative_path
 
 LocationPerformanceRecord = Dict[str, any]
@@ -29,6 +30,7 @@ class DomainClient(ABC):
     def fetch_location_performance(self, state, suburb) -> LocationPerformanceRecord:
         pass
 
+    @abstractmethod
     def authenticate(self):
         pass
 
@@ -48,7 +50,7 @@ class DomainApiClient(DomainClient):
         http.mount("https://", adapter=adapter)
         return http
 
-    def __init__(self, client_id, client_secret) -> None:
+    def __init__(self, client_id:str, client_secret:str) -> None:
         self.token = None
         self.client_id = client_id
         self.client_secret = client_secret
@@ -69,11 +71,13 @@ class DomainApiClient(DomainClient):
             auth = auth, 
             data = data, 
             headers = { "Content-type" : "application/x-www-form-urlencoded" },
-            timeout=10
-            
+            timeout = 10
         )
         
         if not r.ok:
+            print(r.request.url)
+            print(r.request.body)
+            print(r.request.headers)
             r.raise_for_status()
         
         self.save_token(r.json())
@@ -109,12 +113,12 @@ class DomainApiClient(DomainClient):
 
 @resource(
     description="A domain.com.au http client that fetches results from the rest API",
-    config_schema={"client_id" : str, "client_secret": str}
+    config_schema={"domain_client_id" : StringSource, "domain_client_secret": StringSource}
 )
 def domain_api_client(context):
-    return DomainApiClient(context.resource_config["client_id"], context.resource_config["client_secret"])
+    return DomainApiClient(context.resource_config["domain_client_id"], context.resource_config["domain_client_secret"])
 
 if __name__ == "__main__":
-    c = DomainApiClient(**{"client_id": "", "client_secret": ""})
+    c = DomainApiClient(**{"client_id": os.getenv("DOMAIN_CLIENT_ID"), "client_secret": os.getenv("DOMAIN_CLIENT_SECRET")})
     c.authenticate()
     print(json.dumps(c.fetch_location_performance("SA", "Felixstow", "5070"), indent=2))

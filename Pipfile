@@ -19,6 +19,7 @@ black = "*"
 parquet-cli = "*"
 ipykernel = "*"
 pytest = "*"
+pytest-dotenv = "*"
 
 [requires]
 python_version = "3.7"
